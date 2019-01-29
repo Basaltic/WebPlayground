@@ -1,12 +1,12 @@
-import { BoxProperty } from '.'
+import { BoxProperty, Properties } from '.'
 
 export interface Size {
-  width?: BoxProperty
-  height?: BoxProperty
-  minWidth?: BoxProperty
-  minHeight?: BoxProperty
-  maxWidth?: BoxProperty
-  maxHeight?: BoxProperty
+  width?: number
+  height?: number
+  minWidth?: number
+  maxWidth?: number
+  minHeight?: number
+  maxHeight?: number
 }
 
 /**
@@ -40,7 +40,7 @@ const maxHeight: BoxProperty = {
   process
 }
 
-const size: Size = {
+const size: Properties = {
   width,
   height,
   minWidth,
