@@ -3,11 +3,12 @@ import "./App.css";
 import MD5 from "./test/MD5";
 import FileHandler from "./test/FileHandler";
 import Box from "./system/Box";
+import RXJSPlayground from "./test/RXJSPlayground";
 
 export default () => {
   return (
     <div className="App">
-      <Box
+      {/* <Box
         width={0.5}
         height={100}
         maxWidth={200}
@@ -35,7 +36,8 @@ export default () => {
         <div>
           <FileHandler />
         </div>
-      </Box>
+      </Box> */}
+      <RXJSPlayground />
     </div>
   );
 };
