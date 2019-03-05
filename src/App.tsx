@@ -4,8 +4,15 @@ import MD5 from "./test/MD5";
 import FileHandler from "./test/FileHandler";
 import Box from "./system/Box";
 import RXJSPlayground from "./test/RXJSPlayground";
+import HtmlToCanvas from "./test/HtmlToCanvas";
+import Editor from "./editor";
 
 export default () => {
+
+  // html2canvas(document.body).then((canvas) => {
+  //   canvas.toDataURL('image/png')
+  // })
+
   return (
     <div className="App">
       {/* <Box
@@ -37,7 +44,9 @@ export default () => {
           <FileHandler />
         </div>
       </Box> */}
-      <RXJSPlayground />
+      {/* <RXJSPlayground /> */}
+      {/* <HtmlToCanvas /> */}
+      <Editor />
     </div>
   );
 };

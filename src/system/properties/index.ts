@@ -4,6 +4,7 @@ import border, { Border } from './border';
 import basic, { Basic } from './basic';
 import position, { Position } from './position';
 import flex, { Flex } from './flex';
+import background, { Background } from './background';
 
 export interface BoxProperty<V = any> {
   // inline style property key
@@ -18,9 +19,9 @@ export interface Properties {
   [key: string]: BoxProperty;
 }
 
-export interface IProps extends Basic, Size, Space, Border, Position, Flex {}
+export interface IProps extends Basic, Size, Space, Border, Position, Flex, Background {}
 
-const properties: Properties = Object.assign({}, size, space, border, basic, position, flex);
+const properties: Properties = Object.assign({}, size, space, border, basic, position, flex, background);
 
 export default properties;
 // 处理样式property
