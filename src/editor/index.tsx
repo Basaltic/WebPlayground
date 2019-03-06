@@ -3,7 +3,7 @@ import Box from '../system/Box';
 import { Value, ValueJSON, BlockJSON, Data, Operation } from 'slate'
 import { Editor } from 'slate-react'
 import html from './html';
-import nodes from './nodes';
+import blocks, { BlockType } from './blocks';
 import marks from './marks';
 
 const initialValue: ValueJSON = {
@@ -36,9 +36,12 @@ export default () => {
     const jsonStr = JSON.stringify(value.toJSON())
     const htmlStr = html.serialize(value)
     
-    console.log(jsonStr, htmlStr)
+    // console.log(jsonStr, htmlStr)
   }
 
+  function insertImage(data: any = { url: 'abcd'}) {
+    return editorRef.current && editorRef.current.insertBlock({ type: BlockType.IMAGE, data })
+  }
 
   return (
     <Box display="flex" justifyContent="space-around" backgroundColor="#eee" height={1}>
@@ -46,12 +49,15 @@ export default () => {
         Left Bar
       </Box>
       <Box width={500} backgroundColor="white" mt={20}>
+        <Box mb={10}>
+          <button onClick={() => insertImage() }>Image</button>
+        </Box>
         <Editor 
           ref={editorRef} 
           value={value} 
           // plugins={plugins} 
           onChange={onValueChange} 
-          renderNode={nodes} 
+          renderNode={blocks} 
           renderMark={marks} 
           />
       </Box>
@@ -61,3 +67,5 @@ export default () => {
     </Box>
   )
 }
+
+

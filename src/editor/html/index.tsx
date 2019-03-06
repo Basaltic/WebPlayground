@@ -1,6 +1,7 @@
 import Html from 'slate-html-serializer'
 import { BoldMark, CodeMark, ItalicMark, MarkType } from '../marks'
 import React from 'react'
+import { BlockType } from '../blocks';
 
 const rules = [
   {
@@ -9,6 +10,8 @@ const rules = [
         switch (obj.type) {
           case 'paragraph':
             return <p>{children}</p>
+          case BlockType.IMAGE:
+            return <div>Image</div>
         }
       } else if (obj.object === 'mark') {
         switch (obj.type) {
