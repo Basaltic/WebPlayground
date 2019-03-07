@@ -1,10 +1,14 @@
 import React from "react";
 import { IProps, propsToInlineStyle } from "./properties";
 
+interface Props {
+  onClick?: () => void
+}
 
-export default (props: IProps & JSX.ElementChildrenAttribute) => {
+
+export default (props: Props & IProps & JSX.ElementChildrenAttribute) => {
   const style = propsToInlineStyle(props);
 
-  return <div style={style}>{props.children}</div>;
+  return <div style={style} onClick={props.onClick}>{props.children}</div>;
 };
 

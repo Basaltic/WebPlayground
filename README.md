@@ -6,7 +6,7 @@ Web Playground -  play around the web and js
 5.Puppeteer - screan shot
 6.File MD5 in browser
 
-
+`This Project mostly for Experiments and Ideas`
 
 ## Following the blow to start the project
 
