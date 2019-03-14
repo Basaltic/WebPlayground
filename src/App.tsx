@@ -6,6 +6,8 @@ import Box from "./system/Box";
 import RXJSPlayground from "./test/RXJSPlayground";
 import HtmlToCanvas from "./test/HtmlToCanvas";
 import Editor from "./editor";
+import EditableImagePixi from "./editor/components/EditableImagePixi";
+import EditableImage from "./editor/components/EditableImage";
 
 export default () => {
 
@@ -46,7 +48,9 @@ export default () => {
       </Box> */}
       {/* <RXJSPlayground /> */}
       {/* <HtmlToCanvas /> */}
-      <Editor />
+      {/* <Editor /> */}
+      {/* <EditableImagePixi /> */}
+      <EditableImage />
     </div>
   );
 };

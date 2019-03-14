@@ -21,6 +21,8 @@ const rules = [
             return <p>{children}</p>;
           case NodeType.IMAGE:
             return <div>Image</div>;
+          case NodeType.EDITABLE_IMAGE:
+            return <div>Editable Image</div>;
           case NodeType.PRODUCT_CONTAINER:
             return <div>{children}</div>;
         }

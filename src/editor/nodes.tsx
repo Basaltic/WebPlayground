@@ -2,7 +2,7 @@ import React from 'react';
 import { Editor, Block } from 'slate';
 import { RenderNodeProps } from 'slate-react';
 import Image from './components/Image';
-import EditableImage from './components/EditableImage';
+import EditableImage from './components/EditableImagePixi';
 import ProductContainer from './components/ProductContainer';
 import Paragraph from './components/Paragraph';
 
@@ -11,9 +11,8 @@ import Paragraph from './components/Paragraph';
  * 但是分Block 和 Inline
  */
 
-
 export enum NodeType {
-  PARAGRAPH = "paragraph",
+  PARAGRAPH = 'paragraph',
 
   IMAGE = 'image',
   EDITABLE_IMAGE = 'editable_image',
@@ -27,14 +26,16 @@ export enum NodeType {
  */
 export default (props: RenderNodeProps, editor: Editor, next: () => any) => {
   switch (props.node.type) {
+    case NodeType.PRODUCT_CONTAINER:
+      return <ProductContainer {...props} />;
+
     case NodeType.PARAGRAPH:
       return <Paragraph {...props} />;
     case NodeType.IMAGE:
       return <Image {...props} />;
     case NodeType.EDITABLE_IMAGE:
       return <EditableImage {...props} />;
-    case NodeType.PRODUCT_CONTAINER:
-      return <ProductContainer {...props} />;
+
     default:
       return next();
   }

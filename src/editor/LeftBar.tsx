@@ -17,6 +17,9 @@ export default (props: IProps) => {
         <button onClick={() => editor && editor.command(insertNode, NodeType.IMAGE)}>Image</button>
       </Box>
       <Box mb={10}>
+        <button onClick={() => editor && editor.command(insertNode, NodeType.EDITABLE_IMAGE)}>Editable Image</button>
+      </Box>
+      <Box mb={10}>
         <button>Container</button>
       </Box>
     </Box>

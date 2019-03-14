@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
+
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- <canvas id="canvas" width="500" height="256"></canvas> -->
+    <div id="wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+    <script src="./fabric.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script>
+      var img01URL = 'http://fabricjs.com/assets/pug_small.jpg';
+      var img02URL = 'http://fabricjs.com/lib/pug.jpg';
+
+      const canvasWidth = 300;
+      const canvasHeight = 300;
+      const collageInnerMargin = 10;
+      const collageOuterMargin = 10;
+
+      var collage = {
+        width: 360,
+        height: 360,
+        grid: {
+          slots: [
+            { name: 1, top: 0, left: 0, width: 1, height: 0.5 },
+            { name: 2, top: 0.5, left: 0, width: 0.33, height: 0.5 },
+            { name: 3, top: 0.5, left: 0.33, width: 0.33, height: 0.5 },
+            { name: 4, top: 0.5, left: 0.66, width: 0.33, height: 0.5 },
+          ],
+        },
+        images: [],
+      };
+
+      var canvas = new fabric.Canvas('canvas', {
+        backgroundColor: 'lightgrey',
+
+        width: canvasWidth,
+        height: canvasHeight,
+
+        selection: false, // Disable group selection
+        snapAngle: 90,
+        uniScaleTransform: false,
+        controlsAboveOverlay: false,
+        // preserveObjectStacking: true,				// Don't push the active object to the topmost layer
+        perPixelTargetFind: true,
+      });
+
+      const zoomFactor = _.floor(canvasHeight / collage.height, 4);
+      console.log('zoom', zoomFactor);
+      canvas.setZoom(zoomFactor);
+
+      // 01 Google Logo
+      fabric.Image.fromURL(
+        img01URL,
+        image => {
+          const clippingSlot = getSlotClip(collage.grid.slots[0]);
+          image.set({
+            left: 0 * zoomFactor,
+            top: 0 * zoomFactor,
+            scaleX: zoomFactor,
+            scaleY: zoomFactor,
+            selectable: true,
+            evented: true,
+            hasBorders: false,
+            clipTo: function(ctx) {
+              return clipBySlot(ctx, image, clippingSlot);
+            },
+          });
+          canvas.add(image);
+          canvas.renderAll();
+        },
+        { crossOrigin: 'Anonymous' },
+      );
+
+      // 02 Pug
+      fabric.Image.fromURL(
+        img02URL,
+        image => {
+          const clippingSlot = getSlotClip(collage.grid.slots[1]);
+
+          image.set({
+            id: 'pug',
+            left: 0 * zoomFactor,
+            top: 0 * zoomFactor,
+            scaleX: zoomFactor,
+            scaleY: zoomFactor,
+            selectable: true,
+            evented: true,
+            clipTo: function(ctx) {
+              return clipBySlot(ctx, image, clippingSlot);
+            },
+          });
+          canvas.add(image);
+          canvas.renderAll();
+        },
+        { crossOrigin: 'Anonymous' },
+      );
+
+      // 03 Pug
+      fabric.Image.fromURL(
+        img01URL,
+        image => {
+          const clippingSlot = getSlotClip(collage.grid.slots[2]);
+
+          image.set({
+            id: 'pug',
+            left: 0 * zoomFactor,
+            top: 0 * zoomFactor,
+            scaleX: zoomFactor,
+            scaleY: zoomFactor,
+            selectable: true,
+            evented: true,
+            clipTo: function(ctx) {
+              return clipBySlot(ctx, image, clippingSlot);
+            },
+          });
+          canvas.add(image);
+          canvas.renderAll();
+        },
+        { crossOrigin: 'Anonymous' },
+      );
+
+      // 04 Pug
+      fabric.Image.fromURL(
+        img02URL,
+        image => {
+          const clippingSlot = getSlotClip(collage.grid.slots[3]);
+
+          image.set({
+            id: 'pug',
+            left: 0 * zoomFactor,
+            top: 0 * zoomFactor,
+            scaleX: zoomFactor,
+            scaleY: zoomFactor,
+            selectable: true,
+            evented: true,
+            clipTo: function(ctx) {
+              return clipBySlot(ctx, image, clippingSlot);
+            },
+          });
+          canvas.add(image);
+          canvas.renderAll();
+        },
+        { crossOrigin: 'Anonymous' },
+      );
+
+      /*
+       * ========================
+       * Helper Functions
+       * ========================
+       */
+      function calculateAbsolutePosition({ path, width, height, innerMargin = 0, outerMargin = 0 }) {
+        const absolutePath = {
+          left: path.left * width,
+          top: path.top * height,
+          width: path.width * width,
+          height: path.height * height,
+        };
+
+        // Integrate Margin
+        const gridWidthRatio = (width + innerMargin - 2 * outerMargin) / width;
+        const gridHeightRatio = (height + innerMargin - 2 * outerMargin) / height;
+
+        absolutePath.left *= gridWidthRatio;
+        absolutePath.top *= gridHeightRatio;
+        absolutePath.width *= gridWidthRatio;
+        absolutePath.height *= gridHeightRatio;
+
+        absolutePath.left += outerMargin;
+        absolutePath.top += outerMargin;
+        absolutePath.width -= innerMargin;
+        absolutePath.height -= innerMargin;
+
+        absolutePath.left = _.floor(absolutePath.left);
+        absolutePath.top = _.floor(absolutePath.top);
+        absolutePath.width = _.ceil(absolutePath.width);
+        absolutePath.height = _.ceil(absolutePath.height);
+
+        return absolutePath;
+      }
+
+      function getSlotClip(slot) {
+        const position = calculateAbsolutePosition({
+          path: slot,
+          width: collage.width,
+          height: collage.height,
+          outerMargin: collageOuterMargin,
+          innerMargin: collageInnerMargin,
+        });
+
+        // noinspection JSSuspiciousNameCombination
+        return new fabric.Rect({
+          originX: 'left',
+          originY: 'top',
+          objType: 'CLIP',
+          name: slot.name,
+
+          left: position.left,
+          top: position.top,
+
+          //					rx: this.collageCornerRadius,
+          //					ry: this.collageCornerRadius,
+
+          width: position.width,
+          height: position.height,
+
+          fill: 'transparent',
+          // stroke:      'transparent',
+          strokeWidth: 0,
+          selectable: false,
+        });
+      }
+
+      function degToRad(degrees) {
+        return degrees * (Math.PI / 180);
+      }
+
+      function clipBySlot(ctx, image, slot) {
+        //console.log("image scale", image.scaleX, "x", image.scaleY);
+        console.log(`clip by slot ${slot.name}, x: ${slot.left}, y: ${slot.top}, width: ${slot.width}, height: ${slot.height}`);
+        var scaleXTo1 = 1 / image.scaleX;
+        var scaleYTo1 = 1 / image.scaleY;
+
+        // Save context of the canvas so it can be restored after the clipping
+        ctx.save();
+
+        const ctxLeft = -image.left - Math.floor(image.width / 2);
+        const ctxTop = -image.top - Math.floor(image.height / 2);
+
+        ctx.translate(ctxLeft, ctxTop);
+        ctx.rotate(degToRad(image.angle * -1));
+        ctx.scale(scaleXTo1, scaleYTo1);
+        //console.log("ctx scale", ctx.scaleX, "x", ctx.scaleY);
+
+        ctx.beginPath();
+
+        const boundingRect = image.getBoundingRect();
+        //console.log(`[left] ${image.left} - (${boundingRect.width} / 2)`);
+
+        // Transformation because of canvas zoom
+        var scaleX = canvas.viewportTransform[0];
+        var scaleY = canvas.viewportTransform[3];
+
+        ctx.scale(1 / scaleX, 1 / scaleY);
+
+        ctx.rect(scaleX * slot.left, scaleY * slot.top, scaleX * slot.width, scaleY * slot.height);
+        //ctx.stroke()
+        ctx.closePath();
+
+        // Restore the original context.
+        ctx.restore();
+      }
+    </script>
+  </body>
+</html>
