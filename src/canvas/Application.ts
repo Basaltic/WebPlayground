@@ -9,6 +9,8 @@ export class Application {
   protected _lastTime!: number
   protected _startTime!: number
 
+  public canvas: any
+
   public start(): void {
     if (!this._start) {
       this._start = true
@@ -66,6 +68,19 @@ export class Application {
   public update(elapsedMsec: number, intervalSec: number): void {}
 
   public render(): void {}
+
+  private _viewportToCanvasCoordinate(evt: MouseEvent): vec2 {
+    if (this.canvas) {
+      let rect: ClientRect = this.canvas.getBoundingClientRect()
+      if (evt.type === 'mousedown') {
+        console.log(`boundingClientRect: ${JSON.stringify(rect)}`)
+        console.log(`clientX: ${evt.clientX}, clientY: ${evt.clientY}`)
+      }
+      let x: number = evt.clientX - rect.left
+      let y: number = evt.clientY - rect.top
+      return vec2.create(x, y)
+    }
+  }
 }
 
 enum EInputEventType {
@@ -77,12 +92,11 @@ enum EInputEventType {
   KEYBOARDEVENT,
   KEYUP,
   KEYDOWN,
-  KEYPRESS
+  KEYPRESS,
 }
 
 class vec2 {
-
-  public static create(): vec2{
+  public static create(x?: number, y?: number): vec2 {
     return new vec2()
   }
 }
@@ -94,7 +108,12 @@ export class CanvasInputEvent {
 
   public type: EInputEventType
 
-  public constructor(altkey: boolean = false, ctrlKey: boolean = false, shiftKey: boolean = false, type: EInputEventType = EInputEventType.MOUSEEVENT) {
+  public constructor(
+    altkey: boolean = false,
+    ctrlKey: boolean = false,
+    shiftKey: boolean = false,
+    type: EInputEventType = EInputEventType.MOUSEEVENT,
+  ) {
     this.altKey = altkey
     this.ctrlKey = ctrlKey
     this.shiftKey = shiftKey
@@ -103,7 +122,6 @@ export class CanvasInputEvent {
 }
 
 export class CanvasMouseEvent extends CanvasInputEvent {
-  
   // 表示当前鼠标按下时哪个键
   // 0: 左键，1：中键，2：右键
   public button: number
@@ -112,23 +130,29 @@ export class CanvasMouseEvent extends CanvasInputEvent {
 
   public localPosition: vec2
   public constructor(canvasPos: vec2, button: number, altKey: boolean = false, ctrlKey: boolean = false, shiftKey: boolean = false) {
-    super(altKey, ctrlKey, shiftKey);
+    super(altKey, ctrlKey, shiftKey)
     this.canvasPosition = canvasPos
     this.button = button
 
     // 暂时创建一个 vec2
     this.localPosition = vec2.create()
   }
-
 }
 
 export class CanvasKeyboardEvent extends CanvasInputEvent {
   // 当前按下键的ASCII字符/码
-  public key: string;
-  public keyCode: number;
+  public key: string
+  public keyCode: number
   // 当前按下的键是否不停地触发事件
   public repeat: boolean
-  public constructor(key: string, keyCode: number, repeat: boolean, altKey: boolean = false, ctrlKey: boolean = false, shiftKey: boolean = false) {
+  public constructor(
+    key: string,
+    keyCode: number,
+    repeat: boolean,
+    altKey: boolean = false,
+    ctrlKey: boolean = false,
+    shiftKey: boolean = false,
+  ) {
     super(altKey, ctrlKey, shiftKey, EInputEventType.KEYBOARDEVENT)
     this.key = key
     this.keyCode = keyCode
