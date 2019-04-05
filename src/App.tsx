@@ -8,6 +8,7 @@ import HtmlToCanvas from "./test/HtmlToCanvas";
 import Editor from "./editor";
 import EditableImagePixi from "./editor/components/EditableImagePixi";
 import EditableImage from "./editor/components/EditableImage";
+import Canvas from './canvas'
 
 export default () => {
 
@@ -50,7 +51,8 @@ export default () => {
       {/* <HtmlToCanvas /> */}
       {/* <Editor /> */}
       {/* <EditableImagePixi /> */}
-      <EditableImage />
+      {/* <EditableImage /> */}
+      <Canvas />
     </div>
   );
 };

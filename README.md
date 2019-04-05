@@ -5,8 +5,10 @@ Web Playground -  play around the web and js
 4.Simple Style System
 5.Puppeteer - screan shot
 6.File MD5 in browser
+7.FabricJs Playground
+8.Canvas Ainimation Game
 
-`This Project mostly for Experiments and Ideas`
+`This Project mostly for Experiments and Ideas.`
 
 ## Following the blow to start the project
 
