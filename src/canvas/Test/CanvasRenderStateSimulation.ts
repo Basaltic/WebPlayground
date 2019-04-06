@@ -21,3 +21,23 @@ export class RenderState {
     return JSON.stringify(this, null)
   }
 }
+
+export class RenderStateStack {
+  private _stack: RenderState[] = [new RenderState()]
+  // 获取堆栈顶部的渲染状态
+  private get _currentState(): RenderState {
+    return this._stack[this._stack.length - 1]
+  }
+
+  // save其实是克隆栈顶元素，并入栈
+  public save(): void {
+    this._stack.push(this._currentState.clone())
+  }
+
+  // restore就是把栈顶元素状态丢弃
+  public restore(): void {
+    this._stack.pop()
+  }
+
+  
+}
