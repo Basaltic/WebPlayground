@@ -1,6 +1,7 @@
-#canvas {
+canvas {
   background: #ffffff;
   margin-left: 10px;
   margin-top: 10px;
   box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+  border: 10px solid black;
 }

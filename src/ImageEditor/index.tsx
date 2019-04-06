@@ -5,6 +5,6 @@ declare let fabric: any;
 export default () => {
 
   return <div>
-    <canvas/>
+    <canvas />
   </div>
 }
