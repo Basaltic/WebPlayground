@@ -1,3 +1,5 @@
+import { vec2 } from "../math2D";
+
 export class Application implements EventListenerObject {
   // 是否处于不间断循环状态
   protected _start: boolean = false
@@ -326,19 +328,6 @@ enum EInputEventType {
   KEYUP,
   KEYDOWN,
   KEYPRESS,
-}
-
-class vec2 {
-  public x: number = 0
-  public y: number = 0
-  constructor(x: number = 0, y: number = 0) {
-    this.x = x
-    this.y = y
-  }
-
-  public static create(x?: number, y?: number): vec2 {
-    return new vec2(x, y)
-  }
 }
 
 export class CanvasInputEvent {

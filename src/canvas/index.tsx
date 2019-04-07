@@ -27,8 +27,9 @@ export default () => {
 
       // appRef.current = app
 
-      const app: Application = new TestApplication(canvasRef.current)
+      const app: TestApplication = new TestApplication(canvasRef.current)
       app.start()
+      // app.testCanvas2DTextLayout()
     }
   }, [])
 
@@ -58,7 +59,7 @@ export default () => {
       {/* <button onClick={onStart}>Start</button>
       <button onClick={onStop}>Stop</button> */}
       </div>
-      <canvas ref={canvasRef} width="200" height="200" />
+      <canvas ref={canvasRef} width="400" height="400" />
     </div>
   )
 }
