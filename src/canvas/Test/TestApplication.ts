@@ -1,5 +1,5 @@
 import { Canvas2DApplication } from '../Application/Canvas2DApplication'
-import { Size, Rectangle, vec2 } from '../math2D';
+import { Size, Rectangle, vec2 } from '../math2D'
 
 // 文字左右如何对齐
 type TextAlign = 'start' | 'left' | 'center' | 'right' | 'end'
@@ -208,7 +208,7 @@ export class TestApplication extends Canvas2DApplication {
     this.fillText('left - bottom', drawX, drawY, 'white', 'left', 'bottom', '20px sans-serif')
     this.fillCircle(drawX, drawY, radius, 'black')
 
-    // 6.中心 
+    // 6.中心
     drawX = x + width * 0.5
     drawY = y + height * 0.5
     this.fillText('center - middle', drawX, drawY, 'white', 'center', 'middle', '20px sans-serif')
@@ -264,7 +264,15 @@ export class TestApplication extends Canvas2DApplication {
     // 首先计算出要绘制文本的尺寸（width/height)
     const s: Size = this.calcTextSize(text)
     // 创建一个二维向量
-    let o: vec2 = vec2.create();
+    let o: vec2 = vec2.create()
+    // 计算出当前文本子矩形左上角相对父矩形空间中的3个关键点（左上，中心，右下）坐标
+    // 1.当前文本子矩形左上角相对于父矩形左上角坐标，由于局部表示，所以为[0,0]
+    let left: number = 0
+    let top: number = 0
+    // 2.当前文本子矩形左上角相对于父矩形右下角坐标
+    let right: number = parentWidth - s.width
+    let bottom: number = parentHeight - s.height
+    
   }
 }
 
@@ -277,5 +285,5 @@ export enum ETextLayout {
   CENTER_TOP,
   RIGHT_MIDDLE,
   CENTER_BOTTOM,
-  LEFT_MIDDLE
+  LEFT_MIDDLE,
 }
