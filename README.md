@@ -7,6 +7,8 @@ Web Playground -  play around the web and js
 6.File MD5 in browser
 7.FabricJs Playground
 8.Canvas Ainimation Game
+9.CanvasKit-wsam  skia
+10.Pathkit-wsam   skia
 
 `This Project mostly for Experiments and Ideas.`
 
