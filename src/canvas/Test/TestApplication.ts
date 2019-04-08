@@ -272,8 +272,54 @@ export class TestApplication extends Canvas2DApplication {
     // 2.当前文本子矩形左上角相对于父矩形右下角坐标
     let right: number = parentWidth - s.width
     let bottom: number = parentHeight - s.height
-    
+    // 3.当前文本子矩形左上角相对于父矩形中心点坐标
+    let center: number = right * 0.5
+    let middle: number = bottom * 0.5
+    // 根据ETextLayout的值来匹配这3个点的分量
+    // 计算子矩形相对父矩形原点[0,0]偏移量
+    switch (layout) {
+      case ETextLayout.LEFT_TOP:
+        o.x = left
+        o.y = top
+        break
+      case ETextLayout.RIGHT_TOP:
+        o.x = right
+        o.y = top
+        break
+      case ETextLayout.RIGHT_BOTTOM:
+        o.x = right
+        o.y = bottom
+        break
+      case ETextLayout.LEFT_BOTTOM:
+        o.x = left
+        o.y = bottom
+        break
+      case ETextLayout.CENTER_MIDDLE:
+        o.x = center
+        o.y = middle
+        break
+      case ETextLayout.CENTER_TOP:
+        o.x = center
+        o.y = 0
+        break
+      case ETextLayout.RIGHT_MIDDLE:
+        o.x = right
+        o.y = middle
+        break
+      case ETextLayout.CENTER_BOTTOM:
+        o.x = center
+        o.y = bottom
+        break
+      case ETextLayout.LEFT_MIDDLE:
+        o.x = left
+        o.y = middle
+        break
+    }
+    // 返回子矩形
+    return new Rectangle(o, s)
   }
+
+  public fillRectWidthText() {}
 }
 
 export enum ETextLayout {
