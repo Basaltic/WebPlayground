@@ -1,4 +1,4 @@
-Web Playground -  play around the web and js
+Web Playground - play around the web and js
 1.Slate based editor
 2.RxJs Playground
 3.Html to canvas, to image, to blob
@@ -7,8 +7,10 @@ Web Playground -  play around the web and js
 6.File MD5 in browser
 7.FabricJs Playground
 8.Canvas Ainimation Game
-9.CanvasKit-wsam  skia
-10.Pathkit-wsam   skia
+9.CanvasKit-wsam skia
+10.Pathkit-wsam skia
+11.Phaser Playground
+12.Pixi Playground
 
 `This Project mostly for Experiments and Ideas.`
 

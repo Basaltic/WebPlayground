@@ -1,5 +1,5 @@
 import { Canvas2DApplication } from '../Application/Canvas2DApplication'
-import { Size, Rectangle, vec2 } from '../math2D'
+import { Size, Rectangle, vec2, Math2D } from '../math2D'
 import { CanvasMouseEvent } from '../Application/Application'
 
 // 文字左右如何对齐
@@ -26,7 +26,9 @@ export class TestApplication extends Canvas2DApplication {
       this.strokeGrid()
       this.drawCanvasCoordCenter()
 
-      this.doTransform()
+      this.doTransform(10, true)
+
+      this.doTransform(20, false)
 
       this.drawCoordInfo(`[${this._mouseX}, ${this._mouseY}]`, this._mouseX, this._mouseY)
     }
@@ -88,6 +90,26 @@ export class TestApplication extends Canvas2DApplication {
 
       this.context2D.arc(x, y, radius, 0, Math.PI * 2)
       this.context2D.fill()
+
+      this.context2D.restore()
+    }
+  }
+
+  /**
+   * 绘制圆
+   */
+  public strokeCircle(x: number, y: number, radius: number, fillStyle?: string | CanvasGradient | CanvasPattern): void {
+    if (this.context2D !== null) {
+      this.context2D.save()
+
+      if (fillStyle) {
+        // this.context2D.fillStyle = fillStyle
+        this.context2D.strokeStyle = fillStyle
+      }
+      this.context2D.beginPath()
+
+      this.context2D.arc(x, y, radius, 0, Math.PI * 2)
+      this.context2D.stroke()
 
       this.context2D.restore()
     }
@@ -410,21 +432,46 @@ export class TestApplication extends Canvas2DApplication {
   }
 
   // 使用translate方法绘制一个左上角位于画布中心的矩形
-  public doTransform(): void {
+  public doTransform(degree: number, rotateFirst: boolean = true): void {
     if (this.context2D !== null) {
-      const width: number = 100
-      const height: number = 60
+      // 将角度转换为弧度
+      const radians: number = Math2D.toRadian(degree)
+      // 顺时针旋转
+      this.context2D.save()
+      if (rotateFirst) {
+        this.context2D.rotate(radians)
+        // this.context2D.translate(20, 20)
+        this.context2D.translate(this.canvas.width * 0.5, this.canvas.height * 0.5)
+      } else {
+        this.context2D.translate(this.canvas.width * 0.5, this.canvas.height * 0.5)
+        this.context2D.rotate(radians)
+      }
 
-      const x: number = this.canvas.width * 0.5
-      const y: number = this.canvas.height * 0.5
+      this.fillRectWithTitle(0, 0, 100, 60, degree + '度旋转')
+      this.context2D.restore()
 
       this.context2D.save()
 
-      // 调用translate平移到画布中心
-      this.context2D.translate(x, y)
-      this.fillRectWithTitle(0, 0, width, height, '0度旋转')
+      if (rotateFirst) {
+        this.context2D.rotate(-radians)
+        this.context2D.translate(this.canvas.width * 0.5, this.canvas.height * 0.5)
+      } else {
+        this.context2D.translate(this.canvas.width * 0.5, this.canvas.height * 0.5)
+        this.context2D.rotate(-radians)
+      }
+
+      this.fillRectWithTitle(0, 0, 100, 60, degree + '度旋转')
 
       this.context2D.restore()
+
+      this.context2D.save()
+
+      this.context2D.translate(this.canvas.width * 0.5, this.canvas.height * 0.5)
+      this.fillRectWithTitle(0, 0, 100, 60, degree + '度旋转')
+
+      this.context2D.restore()
+      const radius: number = this.distance(0, 0, this.canvas.width * 0.5, this.canvas.height * 0.5)
+      this.strokeCircle(0, 0, radius, 'black')
     }
   }
 }
