@@ -1,5 +1,6 @@
 import { Canvas2DApplication } from '../Application/Canvas2DApplication'
 import { Size, Rectangle, vec2 } from '../math2D'
+import { CanvasMouseEvent } from '../Application/Application'
 
 // 文字左右如何对齐
 type TextAlign = 'start' | 'left' | 'center' | 'right' | 'end'
@@ -21,7 +22,13 @@ export class TestApplication extends Canvas2DApplication {
     if (this.context2D !== null) {
       this.context2D.clearRect(0, 0, this.context2D.canvas.width, this.context2D.canvas.height)
       // this._drawRect(20, 20, 100, 100)
-      this.testCanvas2DTextLayout()
+      // this.testCanvas2DTextLayout()
+      this.strokeGrid()
+      this.drawCanvasCoordCenter()
+
+      this.doTransform()
+
+      this.drawCoordInfo(`[${this._mouseX}, ${this._mouseY}]`, this._mouseX, this._mouseY)
     }
   }
 
@@ -70,11 +77,13 @@ export class TestApplication extends Canvas2DApplication {
   /**
    * 绘制圆
    */
-  public fillCircle(x: number, y: number, radius: number, fillStyle: string | CanvasGradient | CanvasPattern): void {
+  public fillCircle(x: number, y: number, radius: number, fillStyle?: string | CanvasGradient | CanvasPattern): void {
     if (this.context2D !== null) {
       this.context2D.save()
 
-      this.context2D.fillStyle = fillStyle
+      if (fillStyle) {
+        this.context2D.fillStyle = fillStyle
+      }
       this.context2D.beginPath()
 
       this.context2D.arc(x, y, radius, 0, Math.PI * 2)
@@ -319,7 +328,105 @@ export class TestApplication extends Canvas2DApplication {
     return new Rectangle(o, s)
   }
 
-  public fillRectWidthText() {}
+  public fillRectWithTitle(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    title: string = '',
+    layout: ETextLayout = ETextLayout.CENTER_MIDDLE,
+    color: string = 'grey',
+    showCoord: boolean = true,
+  ): void {
+    if (this.context2D !== null) {
+      this.context2D.save()
+
+      // 1.绘制矩形
+      this.context2D.fillStyle = color
+      this.context2D.beginPath()
+      this.context2D.rect(x, y, width, height)
+      this.context2D.fill()
+
+      // 如果有文字的话，先根据枚举值计算x，y坐标
+      if (title.length !== 0) {
+        // 2.绘制文字信息
+        // 在矩形的左上角绘制出文字信息，使用的是10px大小的文字
+        const rect: Rectangle = this.calcLocalTextRectangle(layout, title, width, height)
+        // 绘制文本
+        this.fillText(title, x + rect.origin.x, y + rect.origin.y, 'white', 'left', 'top', '10px sans-serif')
+        // 绘制文本框
+        // this.strokeRect(x + rect.origin.x, y + rect.origin.y, rect.size.width, rect.size.height, 'rgb(0,0,0,0.5)')
+        this.fillCircle(x + rect.origin.x, y + rect.origin.y, 2)
+      }
+      // 3.绘制变换的局部坐标系
+      if (showCoord) {
+        this.strokeCoord(x, y, width + 20, height + 20)
+        this.fillCircle(x, y, 3)
+      }
+
+      this.context2D.restore()
+    }
+  }
+
+  // //// 坐标系转换相关测试代码
+  public drawCanvasCoordCenter(): void {
+    if (this.context2D === null) return
+    // 计算出canvas的中心点
+    const halfWidth: number = this.canvas.width * 0.5
+    const halfHeight: number = this.canvas.height * 0.5
+    this.context2D.save()
+    this.context2D.lineWidth = 2
+    this.context2D.strokeStyle = 'rgb(255, 0, 0, 0.5)'
+    // 使用alpha为0.5的红色来绘制x轴
+    // 调用
+    this.strokeLine(0, halfHeight, this.canvas.width, halfHeight)
+    this.context2D.strokeStyle = 'rgba(0,0,255,0.5)'
+    // 使用alpha为0.5的蓝色来绘制y轴
+    this.strokeLine(halfWidth, 0, halfWidth, this.canvas.height)
+    this.context2D.restore()
+
+    this.fillCircle(halfWidth, halfHeight, 5, 'rgba(0,0,0,0.5)')
+  }
+
+  // 绘制点的坐标信息
+  public drawCoordInfo(info: string, x: number, y: number) {
+    this.fillText(info, x, y, 'black', 'center', 'bottom')
+  }
+
+  // 两点间距离
+  public distance(x0: number, y0: number, x1: number, y1: number) {
+    const diffX: number = x1 - x0
+    const diffY: number = y1 - y0
+    return Math.sqrt(diffX * diffX + diffY * diffY)
+  }
+
+  private _mouseX: number = 0
+  private _mouseY: number = 0
+  public isSupportMouseMove = true
+
+  protected dispatchMouseMove(evt: CanvasMouseEvent): void {
+    this._mouseX = evt.canvasPosition.x
+    this._mouseY = evt.canvasPosition.y
+  }
+
+  // 使用translate方法绘制一个左上角位于画布中心的矩形
+  public doTransform(): void {
+    if (this.context2D !== null) {
+      const width: number = 100
+      const height: number = 60
+
+      const x: number = this.canvas.width * 0.5
+      const y: number = this.canvas.height * 0.5
+
+      this.context2D.save()
+
+      // 调用translate平移到画布中心
+      this.context2D.translate(x, y)
+      this.fillRectWithTitle(0, 0, width, height, '0度旋转')
+
+      this.context2D.restore()
+    }
+  }
 }
 
 export enum ETextLayout {

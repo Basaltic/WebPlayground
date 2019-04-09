@@ -64,3 +64,16 @@ export class Rectangle {
     return new Rectangle(new vec2(x, y), new Size(w, h))
   }
 }
+
+const PiBy180: number = Math.PI / 180
+
+export class Math2D {
+  // 将角度表示的参数转换为弧度
+  public static toRadian(degree: number) {
+    return degree * PiBy180
+  }
+  // 将弧度表示的参数转换为角度表示
+  public static toDegree(radian: number) {
+    return radian / PiBy180
+  }
+}
