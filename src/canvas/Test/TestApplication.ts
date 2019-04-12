@@ -25,12 +25,13 @@ export class TestApplication extends Canvas2DApplication {
       // this.testCanvas2DTextLayout()
       this.strokeGrid()
       this.drawCanvasCoordCenter()
-
-      this.doTransform(10, true)
-
-      this.doTransform(20, false)
-
       this.drawCoordInfo(`[${this._mouseX}, ${this._mouseY}]`, this._mouseX, this._mouseY)
+
+      // this.doTransform(10, true)
+
+      // this.doTransform(20, false)
+
+      this.testFillLocalRectWithTitle()
     }
   }
 
@@ -291,7 +292,7 @@ export class TestApplication extends Canvas2DApplication {
    * 这些子矩形是相对于父矩形坐标系的表示
    * 这意味着父矩形的原点为[0,0],所以参数是父矩形的width和height, 而没有x和y坐标
    */
-  public calcLocalTextRectangle(layout: ETextLayout, text: string, parentWidth: number, parentHeight: number): Rectangle {
+  public calcLocalTextRectangle(layout: ELayout, text: string, parentWidth: number, parentHeight: number): Rectangle {
     // 首先计算出要绘制文本的尺寸（width/height)
     const s: Size = this.calcTextSize(text)
     // 创建一个二维向量
@@ -309,39 +310,39 @@ export class TestApplication extends Canvas2DApplication {
     // 根据ETextLayout的值来匹配这3个点的分量
     // 计算子矩形相对父矩形原点[0,0]偏移量
     switch (layout) {
-      case ETextLayout.LEFT_TOP:
+      case ELayout.LEFT_TOP:
         o.x = left
         o.y = top
         break
-      case ETextLayout.RIGHT_TOP:
+      case ELayout.RIGHT_TOP:
         o.x = right
         o.y = top
         break
-      case ETextLayout.RIGHT_BOTTOM:
+      case ELayout.RIGHT_BOTTOM:
         o.x = right
         o.y = bottom
         break
-      case ETextLayout.LEFT_BOTTOM:
+      case ELayout.LEFT_BOTTOM:
         o.x = left
         o.y = bottom
         break
-      case ETextLayout.CENTER_MIDDLE:
+      case ELayout.CENTER_MIDDLE:
         o.x = center
         o.y = middle
         break
-      case ETextLayout.CENTER_TOP:
+      case ELayout.CENTER_TOP:
         o.x = center
         o.y = 0
         break
-      case ETextLayout.RIGHT_MIDDLE:
+      case ELayout.RIGHT_MIDDLE:
         o.x = right
         o.y = middle
         break
-      case ETextLayout.CENTER_BOTTOM:
+      case ELayout.CENTER_BOTTOM:
         o.x = center
         o.y = bottom
         break
-      case ETextLayout.LEFT_MIDDLE:
+      case ELayout.LEFT_MIDDLE:
         o.x = left
         o.y = middle
         break
@@ -356,7 +357,7 @@ export class TestApplication extends Canvas2DApplication {
     width: number,
     height: number,
     title: string = '',
-    layout: ETextLayout = ETextLayout.CENTER_MIDDLE,
+    layout: ELayout = ELayout.CENTER_MIDDLE,
     color: string = 'grey',
     showCoord: boolean = true,
   ): void {
@@ -474,9 +475,135 @@ export class TestApplication extends Canvas2DApplication {
       this.strokeCircle(0, 0, radius, 'black')
     }
   }
+
+  // 绘制可以变换局部坐标原点的矩形
+  public fillLocalRectWithTitle(
+    width: number,
+    height: number,
+    title: string,
+    referencePt: ELayout = ELayout.CENTER_MIDDLE,
+    layout: ELayout = ELayout.CENTER_MIDDLE,
+    color: string = 'grey',
+    showCoord: boolean = true,
+  ) {
+    let x: number = 0
+    let y: number = 0
+    // 根据referencePt的值计算原点相对左上角的偏移量
+    // Canvas2D中，左上角是默认的坐标系原点，所有原点变换都是相对左上角的偏移
+    switch (referencePt) {
+      case ELayout.LEFT_TOP:
+        x = 0
+        y = 0
+        break
+      case ELayout.LEFT_MIDDLE:
+        x = 0
+        y = -height * 0.5
+        break
+      case ELayout.LEFT_BOTTOM:
+        x = 0
+        y = -height
+        break
+      case ELayout.RIGHT_TOP:
+        x = -width
+        y = 0
+        break
+      case ELayout.RIGHT_MIDDLE:
+        x = -width
+        y = -height * 0.5
+        break
+      case ELayout.RIGHT_BOTTOM:
+        x = -width
+        y = -height
+        break
+      case ELayout.CENTER_TOP:
+        x = -width * 0.5
+        y = 0
+        break
+      case ELayout.CENTER_MIDDLE:
+        x = -width * 0.5
+        y = -height * 0.5
+        break
+      case ELayout.CENTER_BOTTOM:
+        x = -width * 0.5
+        y = -height
+        break
+    }
+    if (this.context2D !== null) {
+      this.context2D.save()
+
+      // 1.绘制矩形
+      this.context2D.fillStyle = color
+      this.context2D.beginPath()
+      this.context2D.rect(x, y, width, height)
+      this.context2D.fill()
+
+      // 如果有文字的话，先根据枚举值计算x，y坐标
+      if (title.length !== 0) {
+        // 2.绘制文字信息
+        // 在矩形的左上角绘制出文字信息，使用的是10px大小的文字
+        const rect: Rectangle = this.calcLocalTextRectangle(layout, title, width, height)
+        // 绘制文本
+        this.fillText(title, x + rect.origin.x, y + rect.origin.y, 'white', 'left', 'top', '10px sans-serif')
+        // 绘制文本框
+        // this.strokeRect(x + rect.origin.x, y + rect.origin.y, rect.size.width, rect.size.height, 'rgb(0,0,0,0.5)')
+        this.fillCircle(x + rect.origin.x, y + rect.origin.y, 2)
+      }
+      // 3.绘制变换的局部坐标系
+      if (showCoord) {
+        this.strokeCoord(0, 0, width + 20, height + 20)
+        this.fillCircle(0, 0, 3)
+      }
+
+      this.context2D.restore()
+    }
+  }
+
+  /**
+   * 先旋转 再平移
+   * @param degree
+   * @param layout
+   * @param width
+   * @param height
+   */
+  public rotateTranslate(degree: number, layout: ELayout = ELayout.LEFT_TOP, width: number = 40, height: number = 20): void {
+    if (this.context2D === null) return
+
+    const radians: number = Math2D.toRadian(degree)
+    this.context2D.save()
+
+    this.context2D.rotate(radians)
+    this.context2D.translate(this.canvas.width * 0.5, this.canvas.height * 0.5)
+
+    this.fillLocalRectWithTitle(width, height, '', layout)
+    this.context2D.restore()
+  }
+
+  public testFillLocalRectWithTitle(): void {
+    if (this.context2D !== null) {
+      // 旋转 0‘，坐标原点位于左上角（默认）
+      this.rotateTranslate(0, ELayout.LEFT_TOP)
+
+      // 顺时针旋转
+      this.rotateTranslate(10, ELayout.LEFT_MIDDLE)
+      this.rotateTranslate(20, ELayout.LEFT_BOTTOM)
+      this.rotateTranslate(30, ELayout.CENTER_TOP)
+      this.rotateTranslate(40, ELayout.CENTER_MIDDLE)
+
+      // 逆时针旋转
+      this.rotateTranslate(-10, ELayout.CENTER_BOTTOM)
+      this.rotateTranslate(-20, ELayout.RIGHT_TOP)
+      this.rotateTranslate(-30, ELayout.RIGHT_MIDDLE)
+      this.rotateTranslate(-40, ELayout.RIGHT_BOTTOM)
+
+      const radius: number = this.distance(0, 0, this.canvas.width * 0.5, this.canvas.height * 0.5)
+      this.strokeCircle(0, 0, radius, 'black')
+    }
+  }
+
+  public doLocalTransform(): void {}
 }
 
-export enum ETextLayout {
+export enum ELayout {
   LEFT_TOP,
   RIGHT_TOP,
   RIGHT_BOTTOM,
