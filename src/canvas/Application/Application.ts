@@ -1,4 +1,4 @@
-import { vec2 } from "../math2D";
+import { vec2 } from '../math2D'
 
 export class Application implements EventListenerObject {
   // 是否处于不间断循环状态
