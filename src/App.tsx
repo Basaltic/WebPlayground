@@ -1,17 +1,17 @@
-import React from "react";
-import "./App.css";
-import MD5 from "./test/MD5";
-import FileHandler from "./test/FileHandler";
-import Box from "./system/Box";
-import RXJSPlayground from "./test/RXJSPlayground";
-import HtmlToCanvas from "./test/HtmlToCanvas";
-import Editor from "./editor";
-import EditableImagePixi from "./editor/components/EditableImagePixi";
-import EditableImage from "./editor/components/EditableImage";
+import React from 'react'
+import './App.css'
+import MD5 from './test/MD5'
+import FileHandler from './test/FileHandler'
+import Box from './system/Box'
+import RXJSPlayground from './test/RXJSPlayground'
+import HtmlToCanvas from './test/HtmlToCanvas'
+import Editor from './editor'
+import EditableImagePixi from './editor/components/EditableImagePixi'
+import EditableImage from './editor/components/EditableImage'
 import Canvas from './canvas'
+import Three from './three'
 
 export default () => {
-
   // html2canvas(document.body).then((canvas) => {
   //   canvas.toDataURL('image/png')
   // })
@@ -52,7 +52,8 @@ export default () => {
       {/* <Editor /> */}
       {/* <EditableImagePixi /> */}
       {/* <EditableImage /> */}
-      <Canvas />
+      {/* <Canvas /> */}
+      <Three />
     </div>
-  );
-};
+  )
+}
