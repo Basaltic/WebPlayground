@@ -11,6 +11,7 @@ Web Playground - play around the web and js
 10.Pathkit-wsam skia
 11.Phaser Playground
 12.Pixi Playground
+13.Three Playground
 
 `This Project mostly for Experiments and Ideas.`
 
