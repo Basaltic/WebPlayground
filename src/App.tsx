@@ -52,8 +52,8 @@ export default () => {
       {/* <Editor /> */}
       {/* <EditableImagePixi /> */}
       {/* <EditableImage /> */}
-      {/* <Canvas /> */}
-      <Three />
+      <Canvas />
+      {/* <Three /> */}
     </div>
   )
 }

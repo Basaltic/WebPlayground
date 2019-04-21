@@ -343,3 +343,13 @@ export class Math2D {
     return Math2D.isPointInCircle(pt, closePt, radius)
   }
 }
+
+/**
+ * 矩阵 类
+ */
+export class mat2d {
+  public values: Float32Array // 表示矩阵的各个元素
+  public constructor(a: number = 1, b: number = 0, c: number = 0, d: number = 1, x: number = 0, y: number = 0) {
+    this.values = new Float32Array()
+  }
+}
