@@ -10,6 +10,7 @@ import EditableImagePixi from './editor/components/EditableImagePixi'
 import EditableImage from './editor/components/EditableImage'
 import Canvas from './canvas'
 import Three from './three'
+import Pixi from './pixi'
 
 export default () => {
   // html2canvas(document.body).then((canvas) => {
@@ -52,8 +53,9 @@ export default () => {
       {/* <Editor /> */}
       {/* <EditableImagePixi /> */}
       {/* <EditableImage /> */}
-      <Canvas />
+      {/* <Canvas /> */}
       {/* <Three /> */}
+      <Pixi />
     </div>
   )
 }
