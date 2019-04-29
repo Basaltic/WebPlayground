@@ -73,7 +73,7 @@ export class vec2 {
   }
 
   // 向量差
-  public static difference(end: vec2, start: vec2, result: vec2 | null): vec2 {
+  public static difference(end: vec2, start: vec2, result: vec2 | null = null): vec2 {
     if (result === null) result = new vec2()
     result.x = end.x - start.x
     result.y = end.y - start.y
@@ -169,6 +169,27 @@ export class vec2 {
     this.x = -this.x
     this.y = -this.y
     return this
+  }
+
+  // 用单位向量来表示 sin，通过这种方式可以替换计算量大的三角函数运算
+  // 等价为：夹角为 a 的两个单位向量的叉积
+  public static sinAngle(a: vec2, b: vec2, norm: boolean = false): number {
+    if (norm === true) {
+      a.normalize()
+      b.normalize()
+    }
+    // return a.x * b.y - b.x * a.y
+    return vec2.crossProduct(a, b)
+  }
+
+  // 用单位向量来表示 cos，通过这种方式可以替换计算量大的三角函数运算
+  // 等价位：夹角为 a 的两个单位向量的点积
+  public static cosAngle(a: vec2, b: vec2, norm: boolean = false): number {
+    if (norm === true) {
+      a.normalize()
+      b.normalize()
+    }
+    return vec2.dotProduct(a, b)
   }
 }
 
@@ -342,14 +363,218 @@ export class Math2D {
 
     return Math2D.isPointInCircle(pt, closePt, radius)
   }
+
+  // 二次贝塞尔曲线标量版
+  public static getQuadraticBezierPosition(start: number, ctrl: number, end: number, t: number): number {
+    if (t < 0.0 || t > 1.0) {
+      throw new Error('取值范围为[0, 1]')
+    }
+    const t1: number = 1.0 - t
+    const t2: number = t1 * t1
+    return t2 * start + 2 * t * t1 * ctrl + t * t * end
+  }
+
+  // 二次贝塞尔曲线向量版
+  public static getQuadraticBezierVector(start: vec2, ctrl: vec2, end: vec2, t: number, result: vec2 | null = null): vec2 {
+    if (result === null) result = vec2.create()
+    result.x = Math2D.getQuadraticBezierPosition(start.x, ctrl.x, end.x, t)
+    result.y = Math2D.getQuadraticBezierPosition(start.y, ctrl.y, end.y, t)
+    return result
+  }
+
+  // 三次贝塞尔曲线标量版
+  public static getCubicBezierPosition(start: number, ctrl0: number, ctrl1: number, end: number, t: number): number {
+    if (t < 0.0 || t > 1.0) {
+      throw new Error('取值范围为[0, 1]')
+    }
+    const t1: number = 1.0 - t
+    const t2: number = t * t
+    const t3: number = t2 * t
+    return t1 * t1 * t1 * start + 3 * t * (t1 * t1) * ctrl0 + 3 * t2 * t1 * ctrl1 + t3 * end
+  }
+
+  // 三次贝塞尔曲线向量版
+  public static getCubicBezierVector(start: vec2, ctrl0: vec2, ctrl1: vec2, end: vec2, t: number, result: vec2 | null = null): vec2 {
+    if (result === null) result = vec2.create()
+    result.x = Math2D.getCubicBezierPosition(start.x, ctrl0.x, ctrl1.x, end.x, t)
+    result.y = Math2D.getCubicBezierPosition(start.y, ctrl0.y, ctrl1.y, end.y, t)
+    return result
+  }
 }
 
 /**
  * 矩阵 类
+ *
+ * 3 * 3 仿射矩阵，最后一行固定为[0, 0, 1]
+ * 仿射变换，又称仿射映射，是指在几何中，一个向量空间进行一次线性变换并接上一个平移，变换为另一个向量空间
+ * a0 a2 a4
+ * a1 a3 a5
+ * 0  0  1
  */
 export class mat2d {
   public values: Float32Array // 表示矩阵的各个元素
   public constructor(a: number = 1, b: number = 0, c: number = 0, d: number = 1, x: number = 0, y: number = 0) {
     this.values = new Float32Array()
+  }
+  public static create(a: number = 1, b: number = 0, c: number = 0, d: number = 1, x: number = 0, y: number = 0) {
+    return new mat2d(a, b, c, d, x, y)
+  }
+  /**
+   * 矩阵乘法
+   */
+  public static multiply(left: mat2d, right: mat2d, result: mat2d) {
+    if (result === null) result = new mat2d()
+    const a0 = left.values[0]
+    const a1 = left.values[1]
+    const a2 = left.values[2]
+    const a3 = left.values[3]
+    const a4 = left.values[4]
+    const a5 = left.values[5]
+
+    const b0 = right.values[0]
+    const b1 = right.values[1]
+    const b2 = right.values[2]
+    const b3 = right.values[3]
+    const b4 = right.values[4]
+    const b5 = right.values[5]
+
+    result.values[0] = a0 * b0 + a2 * b1
+    result.values[1] = a1 * b0 + a3 * b1
+    result.values[2] = a0 * b2 + a2 * b3
+    result.values[3] = a1 * b2 + a3 * b3
+    result.values[4] = a0 * b4 + a2 * b5 + a4
+    result.values[5] = a1 * b4 + a3 * b5 + a5
+    return result
+  }
+
+  /**
+   * 变为单位矩阵
+   * 单位矩阵是对角线是1，其他都是0
+   */
+  public identity(): void {
+    this.values[0] = 1
+    this.values[1] = 0
+    this.values[2] = 0
+    this.values[3] = 1
+    this.values[4] = 0
+    this.values[5] = 0
+  }
+
+  /**
+   * 计算矩阵的行列式
+   * 二阶行列式的另一个意义就是是两个行向量或列向量的叉积的数值，这个数值是z轴上（在二维平面上，z轴的正向想象为指向读者的方向）的叉积分量。如果数值是正值，则与z坐标同向；负值就与z坐标反向。如果我们不强调叉积是第三维的向量，也就是忽略单位向量，那么二阶行列式就与两个向量的叉积完全等价了
+   * @param mat
+   */
+  public static determinant(mat: mat2d): number {
+    return mat.values[0] * mat.values[3] - mat.values[2] * mat.values[1]
+  }
+
+  // 求矩阵src的逆矩阵，将结算后的逆矩阵从result参数输出
+  // 如果有逆矩阵，返回true，否则false
+  // 下面采用 伴随矩阵，行列式的方式求矩阵的逆
+  // 逆矩阵的一个大的用途是实现矩阵的乘法。矩阵A * A的逆矩阵是单位矩阵
+  public static invert(src: mat2d, result: mat2d): boolean {
+    // 1.获取要求逆矩阵的行列式
+    let det: number = mat2d.determinant(src)
+
+    // 2.如果行列式为0，则无法求逆，直接返回false
+    if (Math2D.isEquals(det, 0)) {
+      return false
+    }
+
+    // 3.下面采用 伴随矩阵，行列式的方式求矩阵的逆
+    // 由于计算机除法效率低下，先进行一次除法，求行列式的函数
+    // 后面代码可以直接乘以行列式的倒数，这样避免了多次除法操作
+    det = 1.0 / det
+
+    // 4.下面代码中，* det都是求标准伴随矩阵的源码
+    result.values[0] = src.values[3] * det
+    result.values[1] = -src.values[1] * det
+    result.values[2] = -src.values[2] * det
+    result.values[3] = src.values[0] * det
+    result.values[4] = (src.values[2] * src.values[5] - src.values[3] * src.values[4]) * det
+    result.values[5] = (src.values[1] * src.values[4] - src.values[0] * src.values[5]) * det
+
+    return true
+  }
+
+  /**
+   * 采用列向量的方式
+   * x
+   * y
+   * 0
+   * 矩阵 A * 列向量B =  列向量C
+   */
+  public static transform(mat: mat2d, pt: vec2, result: vec2 | null = null): vec2 {
+    if (result === null) result = vec2.create()
+    result.values[0] = mat.values[0] * pt.values[0] + mat.values[2] * pt.values[1] + mat.values[4]
+    result.values[1] = mat.values[1] * pt.values[0] + mat.values[3] * pt.values[1] + mat.values[5]
+    return result
+  }
+
+  // 生成2d 平移矩阵。把向量、坐标 乘以 平移矩阵就实现的平移的效果
+  public static makeTranslation(tx: number, ty: number, result: mat2d | null = null): mat2d {
+    if (result === null) result = new mat2d()
+    result.values[0] = 1
+    result.values[1] = 0
+    result.values[2] = 0
+    result.values[3] = 1
+    result.values[4] = tx
+    result.values[5] = ty
+    return result
+  }
+
+  // 生成缩放矩阵
+  public static makeScale(sx: number, sy: number, result: mat2d | null = null): mat2d {
+    if (result === null) result = new mat2d()
+    result.values[0] = sx
+    result.values[1] = 0
+    result.values[2] = 0
+    result.values[3] = sy
+    result.values[4] = 0
+    result.values[5] = 0
+    return result
+  }
+
+  // 生成旋转矩阵
+  public static makeRotation(radians: number, result: mat2d | null = null): mat2d {
+    if (result === null) result = new mat2d()
+    const s: number = Math.sin(radians)
+    const c: number = Math.cos(radians)
+    result.values[0] = c
+    result.values[1] = s
+    result.values[2] = -s
+    result.values[3] = c
+    result.values[4] = 0
+    result.values[5] = 0
+    return result
+  }
+
+  // 只求旋转矩阵的逆矩阵
+  // 采用最简单的办法：转置
+  // cos(a)   sin(a)
+  // -sin(a)  cos(a)
+  // 转置为
+  // cos(a)   -sin(a)
+  // sin(a)   cos(a)
+  // 这种方式效率最高，只要更改一下顺序
+  public onlyRotationMatrixInvert(): mat2d {
+    const s: number = this.values[1]
+    this.values[1] = this.values[2]
+    this.values[2] = s
+    return this
+  }
+
+  // 通过向量的方式来构建旋转矩阵
+  public static makeRotationFromVectors(v1: vec2, v2: vec2, norm: boolean = false, result: mat2d | null = null): mat2d {
+    if (result === null) result = new mat2d()
+
+    result.values[0] = vec2.cosAngle(v1, v2, norm)
+    result.values[1] = vec2.sinAngle(v1, v2, norm)
+    result.values[2] = -vec2.sinAngle(v1, v2, norm)
+    result.values[3] = vec2.cosAngle(v1, v2, norm)
+    result.values[4] = 0
+    result.values[5] = 0
+    return result
   }
 }

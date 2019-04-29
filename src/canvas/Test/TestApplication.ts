@@ -1,5 +1,5 @@
 import { Canvas2DApplication } from '../Application/Canvas2DApplication'
-import { Size, Rectangle, vec2, Math2D } from '../math2D'
+import { Size, Rectangle, vec2, Math2D, mat2d } from '../math2D'
 import { CanvasMouseEvent, CanvasKeyboardEvent } from '../Application/Application'
 
 // 文字左右如何对齐
@@ -19,15 +19,16 @@ export class TestApplication extends Canvas2DApplication {
     // this.addTimer(this.timerCallback.bind(this), 0.033)
 
     this._tank = new Tank()
-    this._tank.pos.x = canvas.width * 0.5
-    this._tank.pos.y = canvas.height * 0.5
 
-    // 让坦克按比例整体扩大2倍
-    // this._tank.scaleX = 2
-    // this._tank.scaleY = 2
-    // 分别旋转坦克和炮管
-    this._tank.tankRotation = Math2D.toRadian(30)
-    this._tank.turrentRotation = Math2D.toRadian(-30)
+    // this._tank.pos.x = canvas.width * 0.5
+    // this._tank.pos.y = canvas.height * 0.5
+
+    // // 让坦克按比例整体扩大2倍
+    // // this._tank.scaleX = 2
+    // // this._tank.scaleY = 2
+    // // 分别旋转坦克和炮管
+    // this._tank.tankRotation = Math2D.toRadian(30)
+    // this._tank.turrentRotation = Math2D.toRadian(-30)
   }
 
   public drawTank(): void {
@@ -36,24 +37,21 @@ export class TestApplication extends Canvas2DApplication {
 
   public render(): void {
     if (this.context2D !== null) {
-      this.context2D.clearRect(0, 0, this.context2D.canvas.width, this.context2D.canvas.height)
-
-      this.strokeGrid()
-      this.drawCanvasCoordCenter()
-
-      this.draw4Quadrant()
-      this.drawTank()
-
-      // 坐标信息总是在最后绘制
-      // 1.显示鼠标当前位置（相对坦克坐标系的表示，而不是全局表示！！）
-      // 2.显示当前坦克方位角度，使用Number.toFix(2)方法，将浮点数保留两位小数
-      this.drawCoordInfo(
-        `[${(this._mouseX - this._tank.pos.x).toFixed(2)}, ${(this._mouseY - this._tank.pos.y).toFixed(2)}]
-        角度： ${Math2D.toDegree(this._tank.tankRotation).toFixed(2)}
-        `,
-        this._mouseX,
-        this._mouseY,
-      )
+      // this.context2D.clearRect(0, 0, this.context2D.canvas.width, this.context2D.canvas.height)
+      // this.strokeGrid()
+      // this.drawCanvasCoordCenter()
+      // this.draw4Quadrant()
+      // this.drawTank()
+      // // 坐标信息总是在最后绘制
+      // // 1.显示鼠标当前位置（相对坦克坐标系的表示，而不是全局表示！！）
+      // // 2.显示当前坦克方位角度，使用Number.toFix(2)方法，将浮点数保留两位小数
+      // this.drawCoordInfo(
+      //   `[${(this._mouseX - this._tank.pos.x).toFixed(2)}, ${(this._mouseY - this._tank.pos.y).toFixed(2)}]
+      //   角度： ${Math2D.toDegree(this._tank.tankRotation).toFixed(2)}
+      //   `,
+      //   this._mouseX,
+      //   this._mouseY,
+      // )
     }
   }
 
@@ -983,6 +981,11 @@ export class TestApplication extends Canvas2DApplication {
 
     return angle
   }
+
+  public transform(mat: mat2d): void {
+    if (this.context2D === null) return
+    this.context2D.transform(mat.values[0], mat.values[1], mat.values[2], mat.values[3], mat.values[4], mat.values[5])
+  }
 }
 
 export enum ELayout {
@@ -1163,3 +1166,180 @@ class Tank {
     this.pos = vec2.scaleAdd(this.pos, dir, this.linearSpeed * intervalSec)
   }
 }
+
+// class TankWithMatrix {
+//   // 坦克的大小尺寸
+//   public width: number = 80
+//   public height: number = 50
+
+//   // Tank current position
+//   // default [100, 100]
+//   // public x: number = 100
+//   // public y: number = 100
+//   public pos: vec2 = new vec2(100, 100)
+
+//   // 坦克当前dex和y方向上的缩放系数
+//   public scaleX: number = 1.0
+//   public scaleY: number = 1.0
+//   public scale: vec2 = new vec2(1, 1)
+
+//   // 朝向某个点
+//   // public targetX: number = 0
+//   // public targetY: number = 0
+//   public target: vec2 = new vec2()
+
+//   public linearSpeed: number = 100
+
+//   // 坦克当前的旋转角度
+//   // public tankRotation: number = 0 // 整个坦克的旋转角度，弧度表示
+//   // public turrentRotation: number = 0 // 炮塔的旋转角度，弧度表示
+//   public tankRotation: mat2d = new mat2d()
+
+//   public initYAxis: boolean = false
+//   public showLine: boolean = false //是否显示坦克原点和画布中心点和目标点之间的连线
+
+//   public showCoord: boolean = false // 是否显示坦克自身的局部坐标系
+//   public gunLength: number = Math.max(this.width, this.height) // 炮管的长度
+
+//   public gunMuzzleRadius: number = 5 // 炮筒半径
+
+//   // 绘制坦克
+//   public draw(app: TestApplication): void {
+//     if (app.context2D === null) return
+
+//     // 整个坦克绘制
+//     app.context2D.save()
+
+//     // 整个坦克移动旋转，注意局部变换的经典结合顺序（trs: tranlate -> rotat -> scale)
+//     app.context2D.translate(this.pos.x, this.pos.y)
+//     // app.context2D.rotate(this.initYAxis ? this.tankRotation - Math.PI * 0.5 : this.tankRotation)
+//     app.transform(this.tankRotation)
+//     app.context2D.scale(this.scaleX, this.scaleY)
+
+//     // 绘制坦克底座
+//     app.context2D.save()
+
+//     app.context2D.fillStyle = 'grey'
+//     app.context2D.beginPath
+//     app.context2D.rect(-this.width * 0.5, -this.height * 0.5, this.width, this.height)
+//     app.context2D.fill()
+
+//     app.context2D.restore()
+
+//     // 绘制炮塔
+//     app.context2D.save()
+//     app.context2D.rotate(this.turrentRotation)
+//     app.context2D.fillStyle = 'red'
+//     app.context2D.beginPath()
+//     app.context2D.ellipse(0, 0, 15, 10, 0, 0, Math.PI * 2)
+//     app.context2D.fill()
+
+//     // 炮管
+//     app.context2D.strokeStyle = 'blue'
+//     app.context2D.lineWidth = 5
+//     app.context2D.lineCap = 'round'
+//     app.context2D.beginPath()
+//     app.context2D.moveTo(0, 0)
+//     app.context2D.lineTo(this.gunLength, 0)
+//     app.context2D.stroke()
+//     // 炮口， 先将局部坐标系从当前的方向，向x轴的正方向平移gunLength个像素，此时局部坐标系在炮管的最右侧
+//     app.context2D.translate(this.gunLength, 0)
+//     // 然后再从当前的坐标系向x轴的正方向平移gunMuzzleRadius个像素， 这样炮口的外切圆正好和炮管相接触
+//     app.context2D.translate(this.gunMuzzleRadius, 0)
+//     // 调用自己实现的fillCircle方法， 内部使用Canvas2D arc绘制圆弧方法
+//     app.fillCircle(0, 0, 5, 'black')
+
+//     app.context2D.restore()
+
+//     // 绘制一个圆球，标记坦克正方向，一旦炮管旋转后，可以知道正前方在哪里
+//     app.context2D.save()
+
+//     app.context2D.translate(this.width * 0.5, 0)
+//     app.fillCircle(0, 0, 10, 'green')
+
+//     app.context2D.restore()
+
+//     // 坐标系是跟随整个坦克的
+//     if (this.showCoord) {
+//       app.context2D.save()
+
+//       app.context2D.lineWidth = 1
+//       app.context2D.lineCap = 'round'
+//       app.strokeCoord(0, 0, this.width * 1.2, this.height * 1.2)
+
+//       app.context2D.restore()
+//     }
+
+//     app.context2D.restore()
+
+//     app.context2D.save()
+
+//     app.strokeLine(this.pos.x, this.pos.y, app.canvas.width * 0.5, app.canvas.height * 0.5)
+//     app.strokeLine(this.pos.x, this.pos.y, this.target.x, this.target.y)
+
+//     app.context2D.restore()
+//   }
+
+//   public onMouseMove(evt: CanvasMouseEvent): void {
+//     // this.targetX = evt.canvasPosition.x
+//     // this.targetY = evt.canvasPosition.y
+//     this.target = evt.canvasPosition
+
+//     this._lookAt()
+//   }
+
+//   public update(intervalSec: number): void {
+//     this._moveTowardTo(intervalSec)
+//   }
+
+//   public turretRotateSpeed: number = Math2D.toRadian(2)
+//   public onKeyPress(evt: CanvasKeyboardEvent): void {
+//     if (evt.key === 'r') {
+//       this.turrentRotation += this.turretRotateSpeed
+//     } else if (evt.key === 't') {
+//       this.turrentRotation = 0
+//     } else if (evt.key === 'e') {
+//       this.turrentRotation -= this.turretRotateSpeed
+//     }
+//   }
+
+//   // 朝向targe点
+//   private _lookAt(): void {
+//     // const diffX: number = this.target.x - this.pos.x
+//     // const diffY: number = this.target.y - this.pos.y
+//     // const radian = Math.atan2(diffY, diffX)
+
+//     // 坦克和鼠标位置形成的方向向量
+//     const v: vec2 = vec2.difference(this.target, this.pos)
+//     v.normalize()
+
+//     // 构造从v向x轴的旋转矩阵
+//     this.tankRotation = mat2d.makeRotationFromVectors(v, vec2.xAxis)
+
+//     // this.tankRotation = radian
+//   }
+
+//   private _moveTowardTo(intervalSec: number) {
+//     // const diffX: number = this.targetX - this.x
+//     // const diffY: number = this.targetY - this.y
+
+//     // const currSpeed = this.linearSpeed * intervalSec
+//     // // 1.判断坦克是否要停止运动
+//     // // 需要移动的距离 大于 当前的速度，那么可以继续
+//     // if (diffX * diffX + diffY * diffY > currSpeed * currSpeed) {
+//     //   // 2.使用sin和cos函数计算斜向运动时x，y分量
+//     //   this.x = this.x + Math.cos(this.tankRotation) * currSpeed
+//     //   this.y = this.y + Math.sin(this.tankRotation) * currSpeed
+//     // }
+
+//     // 改用向量实现
+
+//     // 首先计算坦克当前的位置到鼠标点之间的向量
+//     const dir: vec2 = vec2.difference(this.target, this.pos, null)
+//     dir.normalize() // 只保留方向
+
+//     // 调用vec2.scaleAdd方法，表示将当前坦克位置沿着单位方向移动 x 个单位
+
+//     this.pos = vec2.scaleAdd(this.pos, dir, this.linearSpeed * intervalSec)
+//   }
+// }
