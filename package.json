@@ -7,6 +7,7 @@
     "animejs": "^3.0.1",
     "canvaskit-wasm": "^0.5.1",
     "d3": "^5.9.2",
+    "constate": "^1.1.1",
     "fabric": "^2.7.0",
     "html2canvas": "^1.0.0-alpha.12",
     "immutable": "^4.0.0-rc.12",
