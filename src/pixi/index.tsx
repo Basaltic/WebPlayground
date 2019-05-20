@@ -16,9 +16,8 @@ export default () => {
       ticker.add((...args) => {
         renderer.render(stage)
         console.log(args)
-        console.log(ticker.FPS)
       }, PIXI.UPDATE_PRIORITY.LOW)
-      // ticker.start()
+      ticker.start()
 
       // setup sprites
       var sprite = PIXI.Sprite.from(
