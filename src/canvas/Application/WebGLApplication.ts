@@ -1,4 +1,4 @@
-import { Application } from "./Application";
+import { Application } from './Application'
 
 export class WebGLApplication extends Application {
   public context3D: WebGLRenderingContext | null
