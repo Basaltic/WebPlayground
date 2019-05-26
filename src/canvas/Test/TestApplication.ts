@@ -1050,7 +1050,7 @@ class Tank {
     app.context2D.save()
 
     app.context2D.fillStyle = 'grey'
-    app.context2D.beginPath
+    app.context2D.beginPath()
     app.context2D.rect(-this.width * 0.5, -this.height * 0.5, this.width, this.height)
     app.context2D.fill()
 

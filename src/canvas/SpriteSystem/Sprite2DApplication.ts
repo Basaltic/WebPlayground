@@ -1,11 +1,11 @@
 import { Canvas2DApplication } from '../Application/Canvas2DApplication'
 import { CanvasMouseEvent, CanvasKeyboardEvent } from '../Application/Application'
-import { mat2d } from '../math2D'
+import { mat2d, vec2 } from '../math2D'
 
 export default class Sprite2DApplication extends Canvas2DApplication {
   // 声明一个受保护的类型为IDispatcher的成员变量
   // 下面所有的虚方法都委托调用IDispatcher相关的方法
-  protected _dispatcher: IDispatcher
+  protected _dispatcher?: IDispatcher
 }
 
 /**
@@ -62,6 +62,9 @@ export enum ERenderType {
   CLIP,
 }
 
+/**
+ * 渲染状态
+ */
 export interface IRenderState {
   // 是否可见
   isVisible: boolean
@@ -73,6 +76,9 @@ export interface IRenderState {
   renderType: ERenderType
 }
 
+/**
+ * 坐标类型
+ */
 export interface ITransformable {
   x: number
   y: number
@@ -89,4 +95,70 @@ export interface ITransformable {
 export enum EOrder {
   PREORDER,
   POSTORDER,
+}
+
+export type UpdateEventHandler = (spr: ISprite, mesc: number, diffSec: number, travelOrder: EOrder) => void
+export type MouseEventHandler = (spr: ISprite, evt: CanvasMouseEvent) => void
+export type KeyboardEventHandler = (spr: ISprite, evt: CanvasKeyboardEvent) => void
+export type RenderEventHandler = (spr: ISprite, evt: CanvasKeyboardEvent) => void
+
+/**
+ * 精灵接口
+ */
+export interface ISprite extends ITransformable, IRenderState {
+  // 精灵的名称
+  name: string
+  // ISprite引用一个IShape接口，如果draw和hitTest都调用
+  shape: IShape
+  // 双向关联，通过owner找到精灵所在容器
+  owner: ISpriteContainer
+  // 精灵包含的数据
+  data: any
+  // 点选碰撞检测
+  hitTest(localPt: vec2): boolean
+  // 更新
+  update(mesc: number, diff: number, order: EOrder): void
+  // 绘制
+  draw(context: CanvasRenderingContext2D): void
+
+  // 事件处理
+  mouseEvent: MouseEventHandler | null
+  keyEvent: KeyboardEventHandler | null
+  updateEvent: UpdateEventHandler | null
+  renderEvent: RenderEventHandler | null
+}
+
+/**
+ * IDrawable所有接口方法依赖ITransformable, IRenderState和CanvasRenderingContext2D这3个参数进行绘制
+ */
+export interface IDrawable {
+  // 用于draw之前的操作，例如渲染状态进栈、设备各个渲染状态值及设置当前变换矩阵
+  beginDraw(transformable: ITransformable, state: IRenderState, context: CanvasRenderingContext2D): void
+  // 用于形体的绘制操作
+  draw(transformable: ITransformable, state: IRenderState, context: CanvasRenderingContext2D): void
+  // 绘制后的操作，例如渲染状态恢复操作等
+  endDraw(transformable: ITransformable, state: IRenderState, context: CanvasRenderingContext2D): void
+}
+
+/**
+ * 用于点与IShape的精确碰撞检测
+ * 如果选中返回true，否则返回false
+ */
+export interface IHittable {
+  // 参数localPt点事相对于IShape所在的坐标系的偏移（offset）
+  // 这意味着localPt = transform.getLocalMatrix * worldPt
+  // 某些情况下可能需要获取worldPt， 可以做如下操作
+  // worldPt = transform.getWorldMatrix * localPt
+  // 其中 * 表示 Math2D.transform方法
+  hitTest(localPt: vec2, transform: ITransformable): boolean
+}
+
+/**
+ * 精灵形体
+ */
+export interface IShape extends IHittable, IDrawable {
+  // 例如Rect, Circle等具有唯一性表示的字符串
+  readonly type: string
+  // 为了方便起见，有时候需要添加一些不知道数据类型的额外数据
+  data: any
 }

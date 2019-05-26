@@ -54,10 +54,10 @@ export default () => {
       {/* <Editor /> */}
       {/* <EditableImagePixi /> */}
       {/* <EditableImage /> */}
-      {/* <Canvas /> */}
+      <Canvas />
       {/* <Three /> */}
       {/* <Pixi /> */}
-      <StateManagement />
+      {/* <StateManagement /> */}
     </div>
   )
 }
