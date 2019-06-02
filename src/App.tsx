@@ -56,7 +56,7 @@ export default () => {
       {/* <EditableImage /> */}
       <Canvas />
       {/* <Three /> */}
-      {/* <Pixi /> */}
+      <Pixi />
       {/* <StateManagement /> */}
     </div>
   )

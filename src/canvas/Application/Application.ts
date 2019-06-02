@@ -318,7 +318,7 @@ export class Application implements EventListenerObject {
   }
 }
 
-enum EInputEventType {
+export enum EInputEventType {
   MOUSEEVENT,
   MOUSEDOWN,
   MOUSEUP,
@@ -358,6 +358,8 @@ export class CanvasMouseEvent extends CanvasInputEvent {
   public canvasPosition: vec2
 
   public localPosition: vec2
+
+  public hasLocalPosition?: boolean
   public constructor(canvasPos: vec2, button: number, altKey: boolean = false, ctrlKey: boolean = false, shiftKey: boolean = false) {
     super(altKey, ctrlKey, shiftKey)
     this.canvasPosition = canvasPos

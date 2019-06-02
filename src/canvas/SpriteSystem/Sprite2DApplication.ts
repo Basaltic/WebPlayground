@@ -1,11 +1,17 @@
 import { Canvas2DApplication } from '../Application/Canvas2DApplication'
 import { CanvasMouseEvent, CanvasKeyboardEvent } from '../Application/Application'
 import { mat2d, vec2 } from '../math2D'
+import { Sprite2DManager } from './Sprite2DSystem'
 
 export default class Sprite2DApplication extends Canvas2DApplication {
   // 声明一个受保护的类型为IDispatcher的成员变量
   // 下面所有的虚方法都委托调用IDispatcher相关的方法
   protected _dispatcher?: IDispatcher
+
+  public constructor(canvas: HTMLCanvasElement) {
+    super(canvas)
+    this._dispatcher = new Sprite2DManager()
+  }
 }
 
 /**
@@ -100,7 +106,8 @@ export enum EOrder {
 export type UpdateEventHandler = (spr: ISprite, mesc: number, diffSec: number, travelOrder: EOrder) => void
 export type MouseEventHandler = (spr: ISprite, evt: CanvasMouseEvent) => void
 export type KeyboardEventHandler = (spr: ISprite, evt: CanvasKeyboardEvent) => void
-export type RenderEventHandler = (spr: ISprite, evt: CanvasKeyboardEvent) => void
+// export type RenderEventHandler = (spr: ISprite, evt: CanvasKeyboardEvent, order: EOrder) => void
+export type RenderEventHandler = (spr: ISprite, contex: CanvasRenderingContext2D, order: EOrder) => void
 
 /**
  * 精灵接口
