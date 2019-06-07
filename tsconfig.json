@@ -16,5 +16,5 @@
     "jsx": "preserve"
   },
   "include": ["src"],
-  "files": ["./types/MissingTypes.d.ts"]
+  "files": ["./types/MissingTypes.d.ts", "./src/fabric/Fabric.tsx"]
 }
