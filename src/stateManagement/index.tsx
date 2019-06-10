@@ -1,10 +1,48 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CountProvider, useCount, useSelectCount } from './context'
+import produce, { applyPatches, original } from 'immer'
 
 export default () => {
-  console.log('app')
+  const [state, setState] = useState({ countA: 1, countB: 2, list: [{ word: 'lulu' }, { word: 'huhu' }] })
+
+  const list = state.list
+  const countA = state.countA
+  const countB = state.countB
+
+  const addCountA = () =>
+    setState(
+      produce(state, draft => {
+        draft.countA += 1
+      }),
+    )
+
+  const changeWord = () => {
+    const newState = produce(state, draft => {
+      draft.list[0].word = 'to lulu'
+      console.log(original(draft.list))
+    })
+    console.log(newState)
+    setState(newState)
+  }
+
+  console.log(
+    [{}, {}, {}].map(
+      produce((draft, index) => {
+        draft.index = index
+      }),
+    ),
+  )
+
   return (
     <CountProvider>
+      <div>{countA}</div>
+      <button onClick={addCountA}>A</button>
+      <div>{countB}</div>
+      <button>B</button>
+      {list.map(d => (
+        <div key={d.word}>{d.word}</div>
+      ))}
+      <button onClick={changeWord}>C</button>
       <Count1 />
       <br />
       <br />

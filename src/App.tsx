@@ -58,8 +58,8 @@ export default () => {
       {/* <Canvas /> */}
       {/* <Three /> */}
       {/* <Pixi /> */}
-      {/* <StateManagement /> */}
-      <Fabric />
+      <StateManagement />
+      {/* <Fabric /> */}
     </div>
   )
 }
