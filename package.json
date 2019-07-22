@@ -6,10 +6,13 @@
     "@antv/g2": "^3.5.4",
     "acorn": "^6.1.1",
     "animejs": "^3.0.1",
+    "apollo-boost": "^0.4.0",
     "canvaskit-wasm": "^0.5.1",
     "constate": "^1.1.1",
     "d3": "^5.9.2",
     "fabric": "^2.7.0",
+    "graphql": "^14.3.1",
+    "graphql-tag": "^2.10.1",
     "html2canvas": "^1.0.0-alpha.12",
     "immer": "^3.1.3",
     "immutable": "^4.0.0-rc.12",
@@ -20,6 +23,7 @@
     "phaser": "^3.16.2",
     "pixi.js": "^5.0.3",
     "react": "^16.8.6",
+    "react-apollo": "^2.5.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
     "react-router-dom": "^4.3.1",
@@ -38,7 +42,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "plop": "plop --plopfile src/plopGenerator/plopfile.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -65,6 +70,9 @@
     "@types/slate-react": "^0.21.0",
     "@types/spark-md5": "^3.0.1",
     "@types/three": "^0.103.2",
+    "inquirer": "^6.5.0",
+    "inquirer-directory": "^2.2.0",
+    "plop": "^2.4.0",
     "puppeteer": "^1.13.0"
   }
 }

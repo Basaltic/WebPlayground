@@ -28,7 +28,7 @@ export default () => {
   console.log(
     [{}, {}, {}].map(
       produce((draft, index) => {
-        draft.index = index
+        // draft.index = index
       }),
     ),
   )

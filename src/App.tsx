@@ -13,6 +13,7 @@ import Three from './three'
 import Pixi from './pixi'
 import StateManagement from './stateManagement'
 import { Fabric } from './fabric/Fabric'
+import GraphQL from './graphql'
 
 export default () => {
   // html2canvas(document.body).then((canvas) => {
@@ -58,8 +59,9 @@ export default () => {
       {/* <Canvas /> */}
       {/* <Three /> */}
       {/* <Pixi /> */}
-      <StateManagement />
+      {/* <StateManagement /> */}
       {/* <Fabric /> */}
+      <GraphQL />
     </div>
   )
 }
