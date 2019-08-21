@@ -1,5 +1,5 @@
 const promptDirectory = require('inquirer-directory')
-
+export default 1
 module.exports = plop => {
   // Helper函数可以用在模板里面
   plop.setHelper('upperCase', txt => txt.toUpperCase())
