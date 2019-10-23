@@ -1,10 +1,10 @@
-const colors = []
+const colors: any = []
 
 const getZhongGuoSe = () => {
   const listElement = document.getElementById('colors')
   if (listElement) {
     for (let i = 0; i < listElement.children.length; i++) {
-      const item = listElement.children[i].children[0].children[0].children[0]
+      const item: any = listElement.children[i].children[0].children[0].children[0]
       const colorName = item.innerHTML
 
       const rgb = item.style.color

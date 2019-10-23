@@ -1,0 +1,19 @@
+.anime {
+  padding: 200px;
+  position: relative;
+}
+
+.square {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  background-color: #5c2223;
+}
+
+.rule {
+  stroke: #d3d3d3;
+  stroke-miterlimit: 10;
+}
+.box {
+  fill: #88ce02;
+}

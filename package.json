@@ -6,7 +6,7 @@
     "@antv/g2": "^3.5.4",
     "@types/hammerjs": "^2.0.36",
     "acorn": "^6.1.1",
-    "animejs": "^3.0.1",
+    "animejs": "^3.1.0",
     "apollo-boost": "^0.4.0",
     "canvaskit-wasm": "^0.5.1",
     "constate": "^1.1.1",
@@ -14,6 +14,7 @@
     "fabric": "^2.7.0",
     "graphql": "^14.3.1",
     "graphql-tag": "^2.10.1",
+    "gsap": "^2.1.3",
     "hammerjs": "^2.0.8",
     "html2canvas": "^1.0.0-alpha.12",
     "immer": "^3.1.3",
@@ -30,7 +31,6 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.0.1",
     "react-use-gesture": "^5.2.1",
     "redux": "^4.0.1",
     "rxjs": "^6.3.3",
@@ -61,8 +61,10 @@
   ],
   "devDependencies": {
     "@interactjs/types": "^1.4.0-alpha.20",
-    "@types/animejs": "^2.0.1",
+    "@types/animejs": "^3.1.0",
+    "@types/d3": "^5.7.2",
     "@types/fabric": "^2.6.1",
+    "@types/gsap": "^1.20.2",
     "@types/html2canvas": "0.0.35",
     "@types/jest": "23.3.12",
     "@types/lodash": "^4.14.123",
@@ -78,6 +80,7 @@
     "inquirer": "^6.5.0",
     "inquirer-directory": "^2.2.0",
     "plop": "^2.4.0",
-    "puppeteer": "^1.13.0"
+    "puppeteer": "^1.13.0",
+    "react-scripts": "^3.1.1"
   }
 }

@@ -29,3 +29,5 @@ declare module 'react-tagsinput'
 declare module 'react-redux'
 
 declare module 'pixi.js'
+
+declare module 'gsap/Draggable'

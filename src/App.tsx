@@ -1,5 +1,7 @@
 import React from 'react'
 import './App.css'
+import Zhongguose from './Zhongguose'
+import CssGricd from './CssGricd'
 // import MD5 from './test/MD5'
 // import FileHandler from './test/FileHandler'
 // import Box from './system/Box'
@@ -15,6 +17,10 @@ import './App.css'
 // import { Fabric } from './fabric/Fabric'
 // import GraphQL from './graphql'
 // import Gesture from './Gesture'
+// import Anime from './animation'
+// import GsapAnimation from './animation/GsapAnimation';
+// import D from './d3'
+// import SimpleCharts from './d3/SimpleCharts';
 
 export default () => {
   // html2canvas(document.body).then((canvas) => {
@@ -64,6 +70,12 @@ export default () => {
       {/* <Fabric /> */}
       {/* <GraphQL /> */}
       {/* <Gesture /> */}
+      {/* <Anime /> */}
+      {/* <GsapAnimation /> */}
+      {/* <D /> */}
+      {/* <SimpleCharts /> */}
+      {/* <Zhongguose /> */}
+      <CssGricd />
     </div>
   )
 }
