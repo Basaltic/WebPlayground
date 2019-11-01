@@ -1,0 +1,70 @@
+/* .grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.grid img {
+  height: 200px;
+  margin: 10px;
+} */
+
+.grid {
+  width: 100%;
+  display: inline-grid;
+
+  /* 设置 列 和 行 */
+
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  grid-template-areas:
+    'a b c'
+    'd e f'
+    'g h i';
+
+  /* grid-template-columns: [c1] 70% [c2] 30% [c3];
+  grid-template-rows: [r1] 200px [r2] 200px [r3]; */
+
+  /* 行间距，列间距 */
+  grid-row-gap: 20px;
+  grid-column-gap: 20px;
+  grid-gap: 20px 20px;
+
+  /* 内容展现顺序 */
+  grid-auto-flow: row;
+
+  /* Item内容的对齐方式，justify-itmes: 左中右对齐，align-items：上中下对齐， place-items是简写 */
+  justify-items: center;
+  align-items: center;
+  place-items: center center;
+
+  /* 整个内容区域的对齐方式 */
+  justify-content: center;
+  align-content: center;
+  place-content: center;
+
+  /* 如果没有设置 grid-template-columns grid-template-rows的行和列。浏览器自动生成的的行和列，会使用以下属性 */
+  grid-auto-rows: 50px;
+  grid-auto-columns: 50px;
+
+  /* grid-template属性是grid-template-columns、grid-template-rows和grid-template-areas这三个属性的合并简写形式。 */
+  /* grid属性是grid-template-rows、grid-template-columns、grid-template-areas、 grid-auto-rows、grid-auto-columns、grid-auto-flow这六个属性的合并简写形式。 */
+}
+
+/* .grid img {
+  height: 200px;
+  margin: 10px;
+} */
+
+.grid-item {
+  background: #b03532;
+
+  /* grid-column-start: span 2; */
+  grid-column: 0 / 4;
+
+  /* grid-area: a; */
+
+  justify-self: start;
+  align-self: start;
+
+}

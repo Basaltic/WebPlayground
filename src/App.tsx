@@ -1,7 +1,9 @@
 import React from 'react'
 import './App.css'
-import Zhongguose from './Zhongguose'
-import CssGricd from './CssGricd'
+import RichTextEditor from './RichTextEditor'
+// import Zhongguose from './Zhongguose'
+// import CssGricd from './CssGricd'
+// import Layout from './Layout'
 // import MD5 from './test/MD5'
 // import FileHandler from './test/FileHandler'
 // import Box from './system/Box'
@@ -75,7 +77,9 @@ export default () => {
       {/* <D /> */}
       {/* <SimpleCharts /> */}
       {/* <Zhongguose /> */}
-      <CssGricd />
+      {/* <CssGricd /> */}
+      {/* <Layout /> */}
+      <RichTextEditor />
     </div>
   )
 }
